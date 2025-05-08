@@ -1,4 +1,3 @@
-# === Imports ===
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -8,13 +7,12 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
 from sklearn.cluster import KMeans
 
-# --- PAGE CONFIG ---
+
 st.set_page_config(page_title="Grocery Budget Analysis", layout="wide")
 
-# --- TITLE ---
 st.title("🛒 Grocery Budget and Price Trend Analysis")
 
-# --- LOAD CLEANED DATA ---
+# load cleaned data
 @st.cache_data
 def load_data():
     food_prices = pd.read_excel("data/FoodPrices_cleaned.xlsx")
@@ -25,7 +23,7 @@ def load_data():
 
 food_prices, cpi_forecast, ppi_forecast, income_summary = load_data()
 
-# --- SIDEBAR ---
+# streamlit sidebar
 st.sidebar.header("Navigation")
 page = st.sidebar.radio("Go to:", [
     "Overview", 
@@ -37,7 +35,6 @@ page = st.sidebar.radio("Go to:", [
     "AI Grocery Advisor"
 ])
 
-# --- OVERVIEW PAGE ---
 if page == "Overview":
     st.subheader("Project Overview")
     st.markdown(
@@ -55,7 +52,6 @@ if page == "Overview":
     )
     st.image("data/price_distribution.png", caption="Distribution of Food Unit Prices", use_container_width=True)
 
-# --- FOOD PRICES PAGE ---
 elif page == "Food Prices":
     st.subheader("🛒 Food Prices and Budget Categories")
     st.caption("Prices are shown in dollars per unit (e.g., per pound, per gallon, per package). Budget categories (Low, Mid, High) were assigned based on relative affordability using price quantiles.")
@@ -69,7 +65,6 @@ elif page == "Food Prices":
 
     st.dataframe(food_prices[['Product', 'Year', 'Price_per_Unit', 'Budget_Category']].head(10))
 
-    # Dynamic plot
     st.markdown("### Trend: Price per Unit Distribution")
     fig, ax = plt.subplots(figsize=(10,6))
     food_prices['Price_per_Unit'].plot(kind='hist', bins=30, edgecolor='black', alpha=0.7, ax=ax)
@@ -79,7 +74,6 @@ elif page == "Food Prices":
     st.caption("This distribution shows how frequently food items fall into different price ranges across the dataset.")
 
 
-# --- CPI TRENDS PAGE ---
 elif page == "CPI Trends":
     st.subheader("📈 CPI (Consumer Price Index) Trends")
     st.caption("Forecasted annual percent changes in food prices, reflecting expected grocery inflation based on the Consumer Price Index (CPI).")
@@ -91,12 +85,10 @@ elif page == "CPI Trends":
     st.markdown("### Sample CPI Forecast Data")
     st.dataframe(cpi_forecast.head(10))
 
-# --- PPI TRENDS PAGE ---
 elif page == "PPI Trends":
     st.subheader("🏭 PPI (Producer Price Index) Trends")
     st.caption("Forecasted percent changes in producer prices for food commodities. These trends represent cost changes at the supplier level, which can influence future consumer prices.")
 
-    st.markdown("_(PPI graph optional - not shown by saved plot yet)_")
     st.dataframe(ppi_forecast.head(10))
 
     st.markdown("---")
@@ -113,7 +105,6 @@ elif page == "PPI Trends":
     st.caption("Extracted year from forecast attributes for trend analysis. Values represent percent changes compared to the previous period.")
 
 
-# --- INCOME TRENDS PAGE ---
 elif page == "Income Trends":
     st.subheader("🏡 Household Income Growth Trends")
     st.caption("Reported median household incomes are adjusted to 2023 dollars using CPI-U inflation adjustments. Changes reflect real purchasing power growth or decline.")
@@ -125,7 +116,6 @@ elif page == "Income Trends":
     st.markdown("### Income Summary Table")
     st.dataframe(income_summary[['Characteristic', '2022_Estimate', '2023_Estimate']])
 
-# --- ML MODELS PAGE ---
 elif page == "ML Models":
     st.subheader("🧠 Machine Learning Models")
 
@@ -183,10 +173,8 @@ elif page == "ML Models":
     st.pyplot(fig2)
     st.caption("Cluster centers represent the average unit price of items in each group (Cluster 0 = cheapest, Cluster 2 = most expensive).")
 
-# --- AI GROCERY ADVISOR PAGE ---
-# --- AI GROCERY ADVISOR PAGE ---
 elif page == "AI Grocery Advisor":
-    st.subheader("🤖 AI Grocery List Advisor (Gemini API)")
+    st.subheader("🤖 AI Grocery List Advisor")
 
     st.caption("You can either select your income group manually or enter your weekly grocery budget, and we'll match you to an income category.")
 
@@ -230,7 +218,6 @@ elif page == "AI Grocery Advisor":
 
         st.write(f"**Detected Income Group:** {income_group}")
 
-    # --- After getting weekly_budget and income_group, continue like normal ---
 
     # Filter affordable foods
     affordable_foods = food_prices[food_prices['Price_per_Unit'] <= (weekly_budget / 10)]
@@ -250,7 +237,7 @@ elif page == "AI Grocery Advisor":
         st.code(prompt)
 
     if st.button("Get AI Grocery List"):
-        with st.spinner("Gemini is thinking... 🤔"):
+        with st.spinner("Grocery List Loading... 🤔"):
        
             genai.configure(api_key=st.secrets["API_KEY"])
             model = genai.GenerativeModel('gemini-2.5-pro-exp-03-25')
@@ -260,6 +247,6 @@ elif page == "AI Grocery Advisor":
             st.caption("Recommendations prioritize budget constraints while considering inflation trends affecting food costs.")
 
 
-# --- FOOTER ---
+# footer
 st.sidebar.markdown("---")
 st.sidebar.markdown("Built by Rim Nassiri")
