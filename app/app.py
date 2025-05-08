@@ -17,10 +17,10 @@ st.title("🛒 Grocery Budget and Price Trend Analysis")
 # --- LOAD CLEANED DATA ---
 @st.cache_data
 def load_data():
-    food_prices = pd.read_excel("../data/FoodPrices_cleaned.xlsx")
-    cpi_forecast = pd.read_csv("../data/CPIHistoricalForecast_cleaned.csv")
-    ppi_forecast = pd.read_csv("../data/PPIForecast_cleaned.csv")
-    income_summary = pd.read_excel("../data/IncomeSummary_cleaned.xlsx")
+    food_prices = pd.read_excel("data/FoodPrices_cleaned.xlsx")
+    cpi_forecast = pd.read_csv("data/CPIHistoricalForecast_cleaned.csv")
+    ppi_forecast = pd.read_csv("data/PPIForecast_cleaned.csv")
+    income_summary = pd.read_excel("data/IncomeSummary_cleaned.xlsx")
     return food_prices, cpi_forecast, ppi_forecast, income_summary
 
 food_prices, cpi_forecast, ppi_forecast, income_summary = load_data()
@@ -53,7 +53,7 @@ if page == "Overview":
         - 🤖 AI Grocery Recommendation
         """
     )
-    st.image("../data/price_distribution.png", caption="Distribution of Food Unit Prices", use_container_width=True)
+    st.image("data/price_distribution.png", caption="Distribution of Food Unit Prices", use_container_width=True)
 
 # --- FOOD PRICES PAGE ---
 elif page == "Food Prices":
@@ -62,7 +62,7 @@ elif page == "Food Prices":
 
 
     st.markdown("### Average Price per Budget Category Over Years")
-    st.image("../data/avgPrice_bybudgetcategory.png", caption="Average Grocery Price per Unit Over Time", use_container_width=True)
+    st.image("data/avgPrice_bybudgetcategory.png", caption="Average Grocery Price per Unit Over Time", use_container_width=True)
 
     st.markdown("---")
     st.markdown("### Raw Food Prices (Sample)")
@@ -85,7 +85,7 @@ elif page == "CPI Trends":
     st.caption("Forecasted annual percent changes in food prices, reflecting expected grocery inflation based on the Consumer Price Index (CPI).")
 
     st.markdown("### Forecasted Food Price Inflation")
-    st.image("../data/cpi_trend.png", caption="CPI Forecast for All Food Items", use_container_width=True)
+    st.image("data/cpi_trend.png", caption="CPI Forecast for All Food Items", use_container_width=True)
 
     st.markdown("---")
     st.markdown("### Sample CPI Forecast Data")
@@ -119,7 +119,7 @@ elif page == "Income Trends":
     st.caption("Reported median household incomes are adjusted to 2023 dollars using CPI-U inflation adjustments. Changes reflect real purchasing power growth or decline.")
 
     st.markdown("### Income Growth Rate Comparison (2022 - 2023)")
-    st.image("../data/income_change.png", caption="Income Growth by Income Group", use_container_width=True)
+    st.image("data/income_change.png", caption="Income Growth by Income Group", use_container_width=True)
 
     st.markdown("---")
     st.markdown("### Income Summary Table")
